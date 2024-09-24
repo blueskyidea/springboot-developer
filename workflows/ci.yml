@@ -4,7 +4,7 @@ name: CI
 #워크플로가 시작될 조건 지정(main 브랜치에 푸시를 할 대마다 워크플로를 시작하도록 설정)
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   build:
