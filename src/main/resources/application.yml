@@ -1,0 +1,32 @@
+spring:
+  #오버라이딩 가능하도록 변경
+  main:
+    allow-bean-definition-overriding: true
+  jpa:
+    #전송 쿼리 확인
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    #테이블 생성 후에 data.sql 실행
+    defer-datasource-initialization: true
+  datasource:  #데이터베이스 정보 추가
+    url: jdbc:h2:mem:testdb
+    username: sa
+  h2:  #H2 콘솔 활성화
+    console:
+      enabled: true
+  #OAuth(인증값은 외부에 절대 노출되면 안됨)
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 1053777288548-afo29044uqgsaeff6ovsk4v1bgdm9rdi.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - email
+              - profile
+jwt:
+  issuer: gksmf3199@naver.com
+  secret_key: study-springboot
