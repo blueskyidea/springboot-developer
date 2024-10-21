@@ -29,7 +29,7 @@ public class User implements UserDetails {  //UserDetails(스프링 시큐리티
     private String password;
 
     //사용자 이름
-    @Column(name = "nickname", unique = true)
+    @Column(name = "nickname", nullable = false/*, unique = true*/)
     private String nickname;
 
     @Builder

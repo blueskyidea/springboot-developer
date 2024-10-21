@@ -38,5 +38,5 @@ bin/
 ### VS Code ###
 .vscode/
 
-### Mac OS ###
-.DS_Store
+## .yml files ##
+src/main/resources/application-secret.yml

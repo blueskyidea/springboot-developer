@@ -29,6 +29,37 @@
                         class="btn btn-primary btn-sm">수정</button>
                 <button type="button" id="delete-btn" class="btn btn-secondary btn-sm">삭제</button>
             </article>
+            <hr class="mt-5">
+
+            <section class="mb-5 mt-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">댓글 추가</h5>
+                        <div class="mb-3">
+                            <textarea class="form-control" id="content" rows="3"></textarea>
+                        </div>
+                        <button type="button" id="comment-create-btn" class="btn btn-primary" style="display: block">댓글 추가</button>
+                        <button type="button" id="comment-modify" class="btn btn-primary" style="display: none">댓글 수정</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-3" th:each="comment, iterStat : ${article.comments}">
+                <div class="card mb-1" th:id="'comment-' + ${comment.id}"> <!-- 각 댓글 카드에 ID 설정 -->
+                    <div class="card-body">
+                        <div class="text-muted fst-italic mb-2"
+                             th:text="|Commented on %{#temporals.format(comment.createAt, 'yyyy-MM-ddHH:mm')}
+                             By ${comment.author}|"></div>
+                        <p class="card-text" th:text="${comment.content}"></p>
+                        <input type="hidden" class="comment-id" th:value="${comment.id}">
+                        <input type="hidden" class="comment-content" th:value="${comment.content}">
+                    </div>
+                    <div style="text-align: right">
+                        <button type="button" id="comment-modify-btn" class="btn btn-primary btn-sm comment-modify-btn">수정</button>
+                        <button type="button" id="comment-delete-btn" class="btn btn-secondary btn-sm comment-delete-btn">삭제</button>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
 </div>

@@ -42,8 +42,18 @@ dependencies {
 
     //OAuth2를 사용하기 위한 스타터 추가
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+    //값 검증
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    //테스트 할 때 가짜 데이터를 생성해주는 오픈소스 라이브러리
+    testImplementation 'net.datafaker:datafaker:2.0.2'
 }
 
 test {
     useJUnitPlatform()
+}
+
+//빌드 시에 일반 jar 파일만 생성하도록 변경
+jar {
+    enabled = false
 }

@@ -17,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Component
@@ -36,7 +37,16 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                                         Authentication authentication) throws IOException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
 
-        User user = userService.findByEmail((String) oAuth2User.getAttributes().get("email"));
+        User user;
+
+        //카카오(카카오의 경우 이메일은 kakao_account 객체 내부에 존재)
+        if(oAuth2User.getAttributes().containsKey("kakao_account")) {
+            String email = (String) ((Map<?, ?>) oAuth2User.getAttributes().get("kakao_account")).get("email");
+            user = userService.findByEmail(email);
+        }
+        else {  //구글
+            user = userService.findByEmail((String) oAuth2User.getAttributes().get("email"));
+        }
 
         //리프레시 토큰 생성 -> 저장 -> 쿠키에 저장
         String refreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);

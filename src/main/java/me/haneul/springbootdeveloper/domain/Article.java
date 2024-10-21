@@ -1,5 +1,6 @@
 package me.haneul.springbootdeveloper.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -10,6 +11,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @EntityListeners(AuditingEntityListener.class)  //생성 및 수정 시간 자동으로 감시하고 기록
 @Entity  //엔티티로 지정
@@ -37,6 +39,14 @@ public class Article {
     @LastModifiedDate  //엔티티가 수정될 때 수정 시간 저장
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    //참조가 되는 앞부분을 의미, 정상적으로 직렬화 수행(무한루프 스택오버플로우 해결 방법)
+    @JsonManagedReference
+    //mappedBy: 자식 엔티티가 부모 엔티티를 참조할 때 사용
+    //CascadeType.REMOVE: 블로그 글 엔티티가 삭제되면 댓글 엔티티를 모두 삭제
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
+    @OrderBy("createdAt DESC")  //댓글을 생성일 기준으로 내림차순 정렬
+    private List<Comment> comments;
 
     @Builder  //빌더 패턴으로 객체 생성
     public Article(String author, String title, String content) {

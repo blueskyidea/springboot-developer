@@ -202,6 +202,105 @@ function httpRequest(method, url, body, success, fail) {
     });
 }
 
+//댓글 생성 기능
+const commentCreateButton = document.getElementById('comment-create-btn');
+
+if(commentCreateButton) {
+    commentCreateButton.addEventListener('click', event => {
+        articleId = document.getElementById('article-id').value;
+
+        body = JSON.stringify({
+            articleId: articleId,
+            content: document.getElementById('content').value
+        });
+        function success() {
+            alert('등록 완료되었습니다.');
+            location.replace('/articles/' + articleId);
+        };
+        function fail() {
+            alert('등록 실패했습니다.');
+            location.replace('/articles/' + articleId);
+        };
+
+        httpRequest('POST', '/api/comments', body, success, fail)
+    });
+}
+
+//댓글을 순회하며 각 버튼에 이벤트 리스너를 등록함(querySelectorAll을 사용).
+document.querySelectorAll('.comment-modify-btn').forEach(button => {
+    button.addEventListener('click', event => {
+        // 현재 클릭된 댓글의 ID 및 내용을 가져오기 위해 부모 요소 탐색
+        const commentCard = event.target.closest('.card');
+        const commentId = commentCard.querySelector('.comment-id').value; // 클래스 선택자 사용
+        const commentContent = commentCard.querySelector('.comment-content').value; // 클래스 선택자 사용
+
+        // textarea에 포커스 주기
+        document.getElementById("content").focus(); // textarea에 포커스
+
+        // textarea에 수정 전 내용 입력
+        document.getElementById('content').value = commentContent;
+
+        // 댓글 추가 버튼 숨기고 댓글 수정 버튼 보이게 하기
+        document.getElementById('comment-create-btn').style.display = 'none';
+        document.getElementById('comment-modify').style.display = 'block';
+
+        // 수정 버튼 클릭 시 실행될 API 요청 (필요한 경우 수정)
+        const modifyButton = document.getElementById('comment-modify'); // 수정 버튼을 변수에 저장
+        modifyButton.onclick = () => { // addEventListener 대신 onclick 사용
+            let articleId = document.getElementById('article-id').value;
+            let body = JSON.stringify({
+                content: document.getElementById("content").value
+            });
+
+            function success() {
+                alert("수정 완료되었습니다");
+
+                // DOM에서 댓글 내용 업데이트
+                const updatedContent = document.getElementById("content").value;
+                commentCard.querySelector('.comment-content').value = updatedContent; // hidden input update
+                commentCard.querySelector('.card-text').textContent = updatedContent; // visible content update
+
+                // 필요에 따라 해당 댓글로 스크롤
+                commentCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            function fail() {
+                alert("수정 실패했습니다.");
+                location.replace("/articles/" + articleId);
+            }
+
+            // 댓글 수정 API 요청
+            httpRequest("PUT", "/api/comments/" + commentId, body, success, fail);
+        };
+    });
+});
+
+document.querySelectorAll('.comment-delete-btn').forEach(button => {
+    button.addEventListener('click', event => {
+        // 현재 클릭된 댓글의 ID를 가져오기 위해 부모 요소 탐색
+        const commentCard = event.target.closest('.card');
+        const commentId = commentCard.querySelector('.comment-id').value; // 클래스 선택자 사용
+
+        let articleId = document.getElementById('article-id').value;
+
+        // 삭제 확인 후 API 요청
+        if (confirm("댓글을 삭제하시겠습니까?")) {
+            function success() {
+                alert("삭제 완료되었습니다.");
+                location.replace("/articles/" + articleId);
+            }
+
+            function fail() {
+                alert("삭제 실패했습니다.");
+                location.replace("/articles/" + articleId);
+            }
+
+            // 댓글 삭제 API 요청
+            httpRequest("DELETE", "/api/comments/" + commentId, null, success, fail);
+        }
+    });
+});
+
 
 
 

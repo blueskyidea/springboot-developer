@@ -1,4 +1,7 @@
 spring:
+  #application-secret.yml import
+  config:
+    import: application-secret.yml
   #오버라이딩 가능하도록 변경
   main:
     allow-bean-definition-overriding: true
@@ -16,17 +19,3 @@ spring:
   h2:  #H2 콘솔 활성화
     console:
       enabled: true
-  #OAuth(인증값은 외부에 절대 노출되면 안됨)
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: 
-            client-secret:
-            scope:
-              - email
-              - profile
-jwt:
-  issuer: gksmf3199@naver.com
-  secret_key: study-springboot
